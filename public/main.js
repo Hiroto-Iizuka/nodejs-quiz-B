@@ -124,7 +124,7 @@
 
   // クイズの中にエスケープ文字列があるため対応
   const unescapeHTML = (str) => {
-    var div = document.createElement("div");
+    const div = document.createElement("div");
     div.innerHTML = str.replace(/</g,"&lt;")
                       .replace(/>/g,"&gt;")
                       .replace(/ /g, "&nbsp;")
