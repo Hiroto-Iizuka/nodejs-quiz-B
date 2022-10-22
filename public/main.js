@@ -90,9 +90,7 @@
         unescapedCorrectAnswer = unescapeHTML(quiz.correct_answer);
         if (event.target.textContent === unescapedCorrectAnswer) {
           quizState.numberOfCorrects++;
-        } else {
         }
-
         quizState.currentIndex++;
         setNextQuiz();
       });
