@@ -1,7 +1,5 @@
 (() => {
   
-  const QUIZ_API = 'https://opentdb.com/api.php?amount=10&type=multiple';
-
   // QUIZの状態
   const quizState = {
     quizzes : [],
