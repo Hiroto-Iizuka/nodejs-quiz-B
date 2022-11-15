@@ -8,8 +8,9 @@ router.get('/', async (req, res, next) => {
 
   try {
     const response = await fetch(QUIZ_API);
-    const data = await response.json()
-    res.send(data.results);  
+    const data = await response.json();
+    res.header('Content-Type', 'application/json; charset=urf-8');
+    res.send(data.results);
   } catch (error) {
     next(error);
   }
