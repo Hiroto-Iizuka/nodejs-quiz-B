@@ -48,6 +48,7 @@ const fetchQuiz = () => {
     questionElement.textContent = '再度チャレンジしたい場合は以下をクリック！！';
     genreElement.hidden = true;
     difficultyElement.hidden = true;
+    createRestartButton();
   };
 
   // 選択肢クリア
@@ -120,4 +121,12 @@ const fetchQuiz = () => {
 
     return div.textContent || div.innerText;
   };
+
+  const createRestartButton = () => {
+    const restartButton = document.createElement("button");
+    restartButton.textContent = "ホームに戻る"
+    restartButton.setAttribute('onclick', 'window.location.reload();');
+    const targetElement = document.getElementById("restart-button");
+    targetElement.appendChild(restartButton);
+  }
 }
