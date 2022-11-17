@@ -1,10 +1,11 @@
-
+function fetchQuiz() {
 // HTMLのid値がセットされているDOMを取得
 const titleElement = document.getElementById('title');
 const genreElement = document.getElementById('genre');
 const difficultyElement = document.getElementById('difficulty');
 const questionElement = document.getElementById('question');
 const answersContainer = document.getElementById('answers');
+const startButton = document.getElementById('start-button');
 
 // QUIZの状態
 const quizState = {
@@ -17,7 +18,7 @@ const quizState = {
 fetch('/quiz')
   .then(res => res.json())
   .then(data => {
-
+    startButton.remove();
     titleElement.textContent = '取得中'
     questionElement.textContent = '少々お待ちください';
 
@@ -119,3 +120,4 @@ const unescapeHTML = (str) => {
 
   return div.textContent || div.innerText;
 };
+}
