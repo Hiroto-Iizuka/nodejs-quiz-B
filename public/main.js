@@ -1,123 +1,123 @@
-function fetchQuiz() {
-// HTMLのid値がセットされているDOMを取得
-const titleElement = document.getElementById('title');
-const genreElement = document.getElementById('genre');
-const difficultyElement = document.getElementById('difficulty');
-const questionElement = document.getElementById('question');
-const answersContainer = document.getElementById('answers');
-const startButton = document.getElementById('start-button');
+const fetchQuiz = () => {
+  // HTMLのid値がセットされているDOMを取得
+  const titleElement = document.getElementById('title');
+  const genreElement = document.getElementById('genre');
+  const difficultyElement = document.getElementById('difficulty');
+  const questionElement = document.getElementById('question');
+  const answersContainer = document.getElementById('answers');
+  const startButton = document.getElementById('start-button');
 
-// QUIZの状態
-const quizState = {
-  quizzes : [],
-  currentIndex : 0,
-  numberOfCorrects : 0
-};
+  // QUIZの状態
+  const quizState = {
+    quizzes : [],
+    currentIndex : 0,
+    numberOfCorrects : 0
+  };
 
 
-fetch('/quiz')
-  .then(res => res.json())
-  .then(data => {
-    startButton.remove();
-    titleElement.textContent = '取得中'
-    questionElement.textContent = '少々お待ちください';
+  fetch('/quiz')
+    .then(res => res.json())
+    .then(data => {
+      startButton.remove();
+      titleElement.textContent = '取得中'
+      questionElement.textContent = '少々お待ちください';
 
-    quizState.quizzes = data;
-    quizState.currentIndex = 0;
-    quizState.numberOfCorrects = 0;
-    setNextQuiz();
-  });
-
-// クイズを表示する処理
-const setNextQuiz = () => {
-  // 問題文と解答を削除後、次の問題 or 結果を表示
-  questionElement.textContent = '';
-  removeAllAnswers();
-
-  if (quizState.currentIndex < quizState.quizzes.length ) {
-    const quiz = quizState.quizzes[quizState.currentIndex];
-    makeQuiz(quiz);
-  } else {
-    finishQuiz();
-  }
-};
-
-// 結果表示
-const finishQuiz = () => {
-  titleElement.textContent = `あなたの正答数は${quizState.numberOfCorrects}です！！`;
-  questionElement.textContent = '再度チャレンジしたい場合は以下をクリック！！';
-  genreElement.hidden = true;
-  difficultyElement.hidden = true;
-};
-
-// 選択肢クリア
-const removeAllAnswers = () => {
-  while (answersContainer.firstChild) {
-    answersContainer.removeChild( answersContainer.firstChild );
-  }
-};
-
-// クイズの生成
-const makeQuiz = (quiz) => {
-  const answers = buildAnswers(quiz);
-
-  // クイズ情報をセット
-  titleElement.textContent = `問題${quizState.currentIndex + 1}`
-  genreElement.textContent = `【ジャンル】${quiz.category}`
-  difficultyElement.textContent = `【難易度】${quiz.difficulty}`
-  questionElement.textContent = unescapeHTML(quiz.question);
-
-  // 解答選択肢をセット
-  answers.forEach((answer) => {
-    const liElement = document.createElement('li');
-    const buttonElement = document.createElement('button')
-    buttonElement.textContent = unescapeHTML(answer);
-    answersContainer.appendChild(liElement).appendChild(buttonElement);
-
-    // 解答を選択したときの処理
-    liElement.addEventListener('click', (event) => {
-      unescapedCorrectAnswer = unescapeHTML(quiz.correct_answer);
-      if (event.target.textContent === unescapedCorrectAnswer) {
-        quizState.numberOfCorrects++;
-      }
-      quizState.currentIndex++;
+      quizState.quizzes = data;
+      quizState.currentIndex = 0;
+      quizState.numberOfCorrects = 0;
       setNextQuiz();
     });
-  });
-};
 
-// シャッフル済みの解答一覧を取得する
-const buildAnswers = (quiz) => {
-  const answers = [
-    quiz.correct_answer,
-    ...quiz.incorrect_answers
-  ];
+  // クイズを表示する処理
+  const setNextQuiz = () => {
+    // 問題文と解答を削除後、次の問題 or 結果を表示
+    questionElement.textContent = '';
+    removeAllAnswers();
 
-  const shuffledAnswers = shuffle(answers);
+    if (quizState.currentIndex < quizState.quizzes.length ) {
+      const quiz = quizState.quizzes[quizState.currentIndex];
+      makeQuiz(quiz);
+    } else {
+      finishQuiz();
+    }
+  };
 
-  return shuffledAnswers;
-};
+  // 結果表示
+  const finishQuiz = () => {
+    titleElement.textContent = `あなたの正答数は${quizState.numberOfCorrects}です！！`;
+    questionElement.textContent = '再度チャレンジしたい場合は以下をクリック！！';
+    genreElement.hidden = true;
+    difficultyElement.hidden = true;
+  };
 
-// 解答をシャッフル
-const shuffle = (array) => {
-  const copiedArray = array.slice();
-  for (let i = copiedArray.length - 1; i >= 0; i--){
-    const rand = Math.floor( Math.random() * ( i + 1 ) );
-    [copiedArray[i], copiedArray[rand]] = [copiedArray[rand], copiedArray[i]]
-  }
+  // 選択肢クリア
+  const removeAllAnswers = () => {
+    while (answersContainer.firstChild) {
+      answersContainer.removeChild( answersContainer.firstChild );
+    }
+  };
 
-  return copiedArray;
-};
+  // クイズの生成
+  const makeQuiz = (quiz) => {
+    const answers = buildAnswers(quiz);
 
-// クイズの中にエスケープ文字列があるため対応
-const unescapeHTML = (str) => {
-  const div = document.createElement("div");
-  div.innerHTML = str.replace(/</g,"&lt;")
-                    .replace(/>/g,"&gt;")
-                    .replace(/ /g, "&nbsp;")
-                    .replace(/\r/g, "&#13;")
-                    .replace(/\n/g, "&#10;");
+    // クイズ情報をセット
+    titleElement.textContent = `問題${quizState.currentIndex + 1}`
+    genreElement.textContent = `【ジャンル】${quiz.category}`
+    difficultyElement.textContent = `【難易度】${quiz.difficulty}`
+    questionElement.textContent = unescapeHTML(quiz.question);
 
-  return div.textContent || div.innerText;
-};
+    // 解答選択肢をセット
+    answers.forEach((answer) => {
+      const liElement = document.createElement('li');
+      const buttonElement = document.createElement('button')
+      buttonElement.textContent = unescapeHTML(answer);
+      answersContainer.appendChild(liElement).appendChild(buttonElement);
+
+      // 解答を選択したときの処理
+      liElement.addEventListener('click', (event) => {
+        unescapedCorrectAnswer = unescapeHTML(quiz.correct_answer);
+        if (event.target.textContent === unescapedCorrectAnswer) {
+          quizState.numberOfCorrects++;
+        }
+        quizState.currentIndex++;
+        setNextQuiz();
+      });
+    });
+  };
+
+  // シャッフル済みの解答一覧を取得する
+  const buildAnswers = (quiz) => {
+    const answers = [
+      quiz.correct_answer,
+      ...quiz.incorrect_answers
+    ];
+
+    const shuffledAnswers = shuffle(answers);
+
+    return shuffledAnswers;
+  };
+
+  // 解答をシャッフル
+  const shuffle = (array) => {
+    const copiedArray = array.slice();
+    for (let i = copiedArray.length - 1; i >= 0; i--){
+      const rand = Math.floor( Math.random() * ( i + 1 ) );
+      [copiedArray[i], copiedArray[rand]] = [copiedArray[rand], copiedArray[i]]
+    }
+
+    return copiedArray;
+  };
+
+  // クイズの中にエスケープ文字列があるため対応
+  const unescapeHTML = (str) => {
+    const div = document.createElement("div");
+    div.innerHTML = str.replace(/</g,"&lt;")
+                      .replace(/>/g,"&gt;")
+                      .replace(/ /g, "&nbsp;")
+                      .replace(/\r/g, "&#13;")
+                      .replace(/\n/g, "&#10;");
+
+    return div.textContent || div.innerText;
+  };
 }
