@@ -10,14 +10,15 @@ router.get('/', async (req, res, next) => {
     const response = await fetch(QUIZ_API);
     const data = await response.json();
     const quizzes = JSON.parse(JSON.stringify(data.results));
-    quizzes.map (
+    const quizzesJson = quizzes.map(
       quiz => {
         const answers = buildAnswers(quiz);
         quiz.answers = answers;
+        return quiz
       }
     );
     res.header('Content-Type', 'application/json; charset=urf-8');
-    res.send(quizzes);
+    res.send(quizzesJson);
   } catch (error) {
     next(error);
   }
