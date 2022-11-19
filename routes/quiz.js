@@ -10,7 +10,6 @@ router.get('/', async (req, res, next) => {
     const response = await fetch(QUIZ_API);
     const data = await response.json();
     const quizzes = JSON.parse(JSON.stringify(data.results));
-    console.log(quizzes[0]);
     quizzes.map (
       quiz => {
         const answers = buildAnswers(quiz);
