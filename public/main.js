@@ -60,8 +60,6 @@ const fetchQuiz = () => {
 
   // クイズの生成
   const makeQuiz = (quiz) => {
-    const answers = buildAnswers(quiz);
-
     // クイズ情報をセット
     titleElement.textContent = `問題${quizState.currentIndex + 1}`
     genreElement.textContent = `【ジャンル】${quiz.category}`
@@ -69,7 +67,7 @@ const fetchQuiz = () => {
     questionElement.textContent = unescapeHTML(quiz.question);
 
     // 解答選択肢をセット
-    answers.forEach((answer) => {
+    quiz.answers.forEach((answer) => {
       const liElement = document.createElement('li');
       const buttonElement = document.createElement('button')
       buttonElement.textContent = unescapeHTML(answer);
@@ -87,28 +85,6 @@ const fetchQuiz = () => {
     });
   };
 
-  // シャッフル済みの解答一覧を取得する
-  const buildAnswers = (quiz) => {
-    const answers = [
-      quiz.correct_answer,
-      ...quiz.incorrect_answers
-    ];
-
-    const shuffledAnswers = shuffle(answers);
-
-    return shuffledAnswers;
-  };
-
-  // 解答をシャッフル
-  const shuffle = (array) => {
-    const copiedArray = array.slice();
-    for (let i = copiedArray.length - 1; i >= 0; i--){
-      const rand = Math.floor( Math.random() * ( i + 1 ) );
-      [copiedArray[i], copiedArray[rand]] = [copiedArray[rand], copiedArray[i]]
-    }
-
-    return copiedArray;
-  };
 
   // クイズの中にエスケープ文字列があるため対応
   const unescapeHTML = (str) => {
