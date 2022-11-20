@@ -2,7 +2,6 @@
   "name": "nodejs-quiz-b",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
   "scripts": {
     "start": "nodemon app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -11,7 +10,8 @@
   "license": "ISC",
   "dependencies": {
     "ejs": "^3.1.8",
-    "express": "^4.18.2"
+    "express": "^4.18.2",
+    "node-fetch": "^2.6.7"
   },
   "devDependencies": {
     "nodemon": "^2.0.20"
